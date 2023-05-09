@@ -206,7 +206,7 @@ userroute.get('/auth/google/callback',
     client.set('token', token, 'EX', 21600);
     client.set('refreshtoken', refreshtoken, 'EX', 86400);
 
-    const frontendURL = `https://qr-insight-project.netlify.app/`
+    const frontendURL = `https://qr-insight-app.netlify.app/`
     
     res.send(`<a href="${frontendURL}?userid=${user._id}" id="myid">Loding...🕧</a>
     <script>
@@ -383,7 +383,7 @@ userroute.get("/callback",async (req,res)=>{
     client.set('token', token, 'EX', 21600);
     client.set('refreshtoken', refreshtoken, 'EX', 86400);
 
-    const frontendURL1 = `https://qr-insight-project.netlify.app/`
+    const frontendURL1 = `https://qr-insight-app.netlify.app/`
     
     res.send(`<a href="${frontendURL1}?userid=${gitusser._id}" id="myid">Loading ... 🕧</a>
     <script>
