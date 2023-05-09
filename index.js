@@ -27,6 +27,10 @@ app.use(express.json());
 
 app.use(cors());
 
+app.get('/', (req,res)=>{
+    res.status(200).send(`<a href="https://github.com/Niteshthori24198/substantial-money-3994"> QR Insight </a>`)
+})
+
 app.use("/user",userroute)
 
 app.use("/query",queryRouter)
