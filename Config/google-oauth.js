@@ -7,7 +7,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 passport.use(new GoogleStrategy({
     clientID: process.env.googleclientid,
     clientSecret: process.env.googleclientsecret,
-    callbackURL: "http://localhost:3000/user/auth/google/callback"
+    callbackURL: "https://angry-cummerbund-newt.cyclic.app/user/auth/google/callback"
   },
   async function(accessToken, refreshToken, profile, cb) {
     try {
