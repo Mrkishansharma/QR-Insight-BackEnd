@@ -182,6 +182,7 @@ let sendotpmail=async(Name,Email,otp)=>{
                
             }
         });
+       console.log("2")
     } catch (error) {
         console.log(error)
        console.log('catch error while sending otp mail')
@@ -244,8 +245,12 @@ userroute.post("/forgetpass",async(req,res)=>{
             }
             console.log(OTP)
             client.set('OTP', OTP, 'EX', 3600);
-           console.log('function call for send otp mail =>', user.Name,user.Email,OTP)
-            sendotpmail(user.Name,user.Email,OTP)
+           
+            console.log('function call for send otp mail =>', user.Name,user.Email,OTP)
+           
+            const anssendotpfunc = await sendotpmail(user.Name,user.Email,OTP)
+            
+            console.log('ans send otp func ==> ',anssendotpfunc)
 
         }
         res.send({"userdetails":user})
