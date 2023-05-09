@@ -25,7 +25,7 @@ userroute.post("/register", async(req,res)=>{
     try {
         let {Name,Email,Password,Address,Gender}=req.body
         let user=await UserModel.findOne({Email})
-        console.log(user)
+        console.log('print user => ',user)
 
         if(user){
             return res.status(400).send({"msg":"already exist please login"})
@@ -37,7 +37,7 @@ userroute.post("/register", async(req,res)=>{
         newuser.ismailverified=false
         let dbnewuser=await newuser.save()
 
-        console.log(dbnewuser)
+        console.log("new user for db => ",dbnewuser)
         
         sendverificationmail(Name,Email,dbnewuser._id)
         res.status(200).send({"msg":"User registered successfully. Please verify your email address."})
@@ -45,13 +45,14 @@ userroute.post("/register", async(req,res)=>{
 
     } catch (error) {
         res.status(400).send(error)
-        console.log(error)
+        console.log('error while register => ',error)
     }
 })
 
 //to send mail==============================================================
 
 let sendverificationmail=async(Name,Email,userid)=>{
+   console.log('sending email function called => ',Name, Email, userid)
     try {
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -69,17 +70,22 @@ let sendverificationmail=async(Name,Email,userid)=>{
             subject: 'For verifecation mail',
             html:`<p>hi ${Name} <br> please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your mail. </p>`
         };
+       
+       console.log('mailOptions => ',mailOptions)
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
+               console.log('email sent failed')
                 
             } else {
                 console.log('Email sent: ' + info.response);
+               console.log('email sent successfully')
                
             }
         });
     } catch (error) {
+       console.log('error while sending email')
         console.log(error)
     }
 
@@ -162,18 +168,23 @@ let sendotpmail=async(Name,Email,otp)=>{
             subject: 'OTP verifecation mail',
             html:`<p>HI ${Name} <br> please use this OTP to update password.<br> ${otp} </p>`
         };
+       
+       console.log('mailOptions for send otp ==> ',mailOptions)
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error);
+               console.log('error while sending otp on mail. email sent failed')
                 
             } else {
                 console.log('Email sent: ' + info.response);
+               console.log('email sent successfull for otp')
                
             }
         });
     } catch (error) {
         console.log(error)
+       console.log('catch error while sending otp mail')
     }
 
 }
@@ -233,6 +244,7 @@ userroute.post("/forgetpass",async(req,res)=>{
             }
             console.log(OTP)
             client.set('OTP', OTP, 'EX', 3600);
+           console.log('function call for send otp mail =>', user.Name,user.Email,OTP)
             sendotpmail(user.Name,user.Email,OTP)
 
         }
@@ -246,6 +258,8 @@ userroute.post("/verifyotp",async(req,res)=>{
     try {
         let {OTP}=req.body
        let otp=await client.get('OTP')
+       console.log('OTP from user ', OTP)
+       console.log('otp from redis', otp)
        if(OTP==otp){
         res.status(200).send({"msg":"Otp verified"})
        }else{
