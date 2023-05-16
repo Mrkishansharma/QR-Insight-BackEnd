@@ -40,6 +40,8 @@ const middleware = async (req, res, next) => {
                         let token = jwt.sign({ id, verified, role }, process.env.secretkey, { expiresIn: "6hr" })
                         client.set('token', token, 'EX', 21600);
 
+                        req.qr = {}
+
                         req.qr.id = id
                         req.qr.verified = verified
                         req.qr.role = role
@@ -87,6 +89,8 @@ const middleware = async (req, res, next) => {
                         let token = jwt.sign({ id, verified, role }, process.env.secretkey, { expiresIn: "6hr" })
                         client.set('token', token, 'EX', 21600);
 
+                        req.qr = {}
+
                         req.qr.id = id
                         req.qr.verified = verified
                         req.qr.role = role
@@ -98,6 +102,9 @@ const middleware = async (req, res, next) => {
                 } else {
 
                     let { id, verified, role } = decodedtoken
+
+                    req.qr = {}
+
                     req.qr.id = id
                     req.qr.verified = verified
                     req.qr.role = role
