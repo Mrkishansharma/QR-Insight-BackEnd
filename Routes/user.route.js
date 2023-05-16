@@ -166,7 +166,7 @@ let sendotpmail = async (Name, Email, otp) => {
             from: 'mr.rajeshkumar7678@gmail.com',
             to: Email,
             subject: 'OTP verifecation mail',
-            html: `<p>HI ${Name} <br> Please use this OTP to update your password.<br> ${otp} </p>`
+            html: `<p>Hi ${Name} <br> Please use this OTP to update your password.<br> ${otp} </p>`
         };
 
         console.log('mailOptions for send otp ==> ', mailOptions)
@@ -208,12 +208,28 @@ userroute.get('/auth/google/callback',
 
         const frontendURL = `https://qr-insight-app.netlify.app/`
 
-        res.send(`<a href="${frontendURL}?userid=${user._id}" id="myid">Loding...🕧</a>
-    <script>
-        let a = document.getElementById('myid')
-        a.click()
-        console.log(a)
-    </script>`)
+        res.send(`
+                <a href="${frontendURL}?userid=${user._id}" id="myid" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #222222; margin: 0; padding: 0; overflow: scroll;">
+                    <img src="https://i.pinimg.com/originals/2e/9c/68/2e9c6878eae5bbcdaa2d07ed4dbd79b8.gif" alt="">
+                </a>
+                <script>
+                    let a = document.getElementById('myid')
+                    setTimeout(()=>{
+                        a.click()
+                    },4000)
+                    console.log(a)
+                </script>
+        `)
+
+        //     res.send(`<a href="${frontendURL}?userid=${user._id}" id="myid">Loding...🕧</a>
+        // <script>
+        //     let a = document.getElementById('myid')
+        //     a.click()
+        //     console.log(a)
+        // </script>`)
+
+
+
 
 
     });
@@ -227,7 +243,7 @@ userroute.get("/getdata", async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(400).send({error:error.message})
+        res.status(400).send({ error: error.message })
     }
 })
 
@@ -258,7 +274,7 @@ userroute.post("/forgetpass", async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(400).send({
-            error : error.message
+            error: error.message
         })
     }
 })
@@ -278,7 +294,7 @@ userroute.post("/verifyotp", async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(400).send({
-            error : error.message
+            error: error.message
         })
     }
 })
@@ -301,7 +317,7 @@ userroute.put("/updatepass", async (req, res) => {
 
     } catch (error) {
         res.send({
-            error:error.message
+            error: error.message
         })
     }
 })
@@ -327,8 +343,8 @@ userroute.get("/logout", async (req, res) => {
     } catch (error) {
         console.log(error)
         res.send({
-            error:error.message,
-            msg : "Something went wrong"
+            error: error.message,
+            msg: "Something went wrong"
         })
     }
 
@@ -403,12 +419,32 @@ userroute.get("/callback", async (req, res) => {
 
     const frontendURL1 = `https://qr-insight-app.netlify.app/`
 
-    res.send(`<a href="${frontendURL1}?userid=${gitusser._id}" id="myid">Loading ... 🕧</a>
-    <script>
-        let a = document.getElementById('myid')
-        a.click()
-        console.log(a)
-    </script>`)
+
+
+    res.send(`
+                <a href="${frontendURL1}?userid=${user._id}" id="myid" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #222222; margin: 0; padding: 0; overflow: scroll;">
+                    <img src="https://i.pinimg.com/originals/2e/9c/68/2e9c6878eae5bbcdaa2d07ed4dbd79b8.gif" alt="">
+                </a>
+                <script>
+                    let a = document.getElementById('myid')
+                    setTimeout(()=>{
+                        a.click()
+                    },4000)
+                    console.log(a)
+                </script>
+        `)
+
+
+    // res.send(`<a href="${frontendURL1}?userid=${gitusser._id}" id="myid">Loading ... 🕧</a>
+    // <script>
+    //     let a = document.getElementById('myid')
+    //     a.click()
+    //     console.log(a)
+    // </script>`)
+
+
+
+
 })
 
 async function gituser(Email, user) {
