@@ -27,7 +27,7 @@ const middleware = async (req, res, next) => {
 
             if (!refreshtoken) {
 
-                return res.status(400).send({ "msg": "Please login first. AccessToken Not Found (case 0)" });
+                return res.status(400).send({ "msg": "Please Login Again. AccessToken Not Found (Case : 0)" });
 
             } else {
                 try {
@@ -40,21 +40,21 @@ const middleware = async (req, res, next) => {
                         let token = jwt.sign({ id, verified, role }, process.env.secretkey, { expiresIn: "6hr" })
                         client.set('token', token, 'EX', 21600);
 
-                        req.id = id
-                        req.verified = verified
-                        req.role = role
+                        req.qr.id = id
+                        req.qr.verified = verified
+                        req.qr.role = role
 
                         next()
 
 
                     } else {
 
-                        return res.status(400).send({ "msg": "Please login first. case 1 " });
+                        return res.status(400).send({ "msg": "Please Login First. (Case : 0) " });
 
                     }
                 } catch (error) {
 
-                    return res.status(400).send({ "msg": "Please login first. case 2" });
+                    return res.status(400).send({ "msg": "Please Login First. (Case : 1)" });
 
                 }
             }
@@ -67,7 +67,7 @@ const middleware = async (req, res, next) => {
 
 
                 if (istokenblacklist || isrefreshtokenblacklisted) {
-                    return res.status(400).send({ msg: "Not Authorized. PLease Login Again" });
+                    return res.status(400).send({ msg: "Not Authorized. PLease Login Again (Case : 1)" });
                 }
 
                 try {
@@ -78,16 +78,16 @@ const middleware = async (req, res, next) => {
 
                     if (!decodedtoken) {
                         if (!decodedrefreshtoken) {
-                            return res.status(400).send({ msg: "not authorized" });
+                            return res.status(400).send({ msg: "Unauthorized Access. (Case : 2)" });
                         } else {
                             let { id, verified, role } = decodedrefreshtoken
 
                             let token = jwt.sign({ id, verified, role }, process.env.secretkey, { expiresIn: "6hr" })
                             client.set('token', token, 'EX', 21600);
 
-                            req.id = id
-                            req.verified = verified
-                            req.role = role
+                            req.qr.id = id
+                            req.qr.verified = verified
+                            req.qr.role = role
 
                             next()
 
@@ -96,9 +96,9 @@ const middleware = async (req, res, next) => {
                     } else {
 
                         let { id, verified, role } = decodedtoken
-                        req.id = id
-                        req.verified = verified
-                        req.role = role
+                        req.qr.id = id
+                        req.qr.verified = verified
+                        req.qr.role = role
 
                         next();
                     }
@@ -107,19 +107,19 @@ const middleware = async (req, res, next) => {
 
 
                 } catch (error) {
-                    return res.status(400).send({ "msg": "Please login first. case 3" });
+                    return res.status(400).send({ "msg": "Please Login First. (Case : 3)" });
                 }
 
             } catch (error) {
-                return res.status(400).send({ "msg": "Please login first. case 4" });
+                return res.status(400).send({ "msg": "Please Login First. (Case : 4)" });
             }
 
         }
 
 
     } catch (error) {
-        res.send(error)
         console.log(error)
+        res.send({msg:error.message})
     }
 
 
