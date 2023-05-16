@@ -78,7 +78,7 @@ const textQrRouter = async (req, res) => {
             // console.log(url)
             
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "text",
                 Detail : URL,
@@ -143,7 +143,7 @@ const linkQrRouter = async (req, res) => {
             }
 
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "link",
                 Detail : URL,
@@ -206,7 +206,7 @@ const phoneQrRouter = async (req, res) => {
             }
 
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "phone",
                 Detail : URL,
@@ -275,7 +275,7 @@ const whatsappQrRouter = async (req, res) => {
             }
 
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "whatsapp",
                 Detail : URL,
@@ -338,7 +338,7 @@ const upiQrRouter = async (req, res) => {
 
             // console.log(url)
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "upi",
                 Detail : URL,
@@ -403,7 +403,7 @@ const emailQrRouter = async (req, res) => {
 
             // console.log(url)
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "email",
                 Detail : URL,
@@ -482,7 +482,7 @@ const zoomQrRouter = async (req, res) => {
 
             // console.log(url)
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "zoom",
                 Detail : URL,
@@ -544,7 +544,7 @@ const wifiQrRouter = async (req, res) => {
             }
 
             // console.log(url)
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "wifi",
                 Detail : URL,
@@ -612,7 +612,7 @@ const vcardQrRouter = async (req, res) => {
 
             // console.log(url)
 
-            const UserID = req.id;
+            const UserID = req.qr.id;
             const QRCodes = {
                 Formate : "vcard",
                 Detail : URL,

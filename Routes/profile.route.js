@@ -21,13 +21,13 @@ profileRouter.patch('/updateProfile/:ID',middleware, async (req,res) =>{
     console.log(req.body);
 
     const { ID } = req.params;
-    const userid = req.id;
+    const userid = req.qr.id;
     const payload = req.body;
 
     console.log("foolchand --->",ID,userid)
 
     if(ID !== userid){
-        return  res.status(400).send({error:"Unauthorizated Access", success:false});
+        return  res.status(400).send({error:"Unauthorizated Access. You Can't Update Profile Of Another User.", success:false});
     }
 
     try {
@@ -42,7 +42,7 @@ profileRouter.patch('/updateProfile/:ID',middleware, async (req,res) =>{
     } catch (error) {
         return res.status(500).send({
             success : false,
-            error : error
+            error : error.message
         })
     }
 })
@@ -50,17 +50,17 @@ profileRouter.patch('/updateProfile/:ID',middleware, async (req,res) =>{
 
 profileRouter.delete('/deleteProfile/:ID',middleware, async (req,res) =>{
     const { ID } = req.params;
-    const userid = req.id;
+    const userid = req.qr.id;
 
     if(ID !== userid){
-        return res.status(400).send({error:"Unauthorizated Access", success:false});
+        return res.status(400).send({error:"Unauthorizated Access. You Can't Delete Profile Of Another User.", success:false});
     }
 
     try {
         const user = await UserModel.findById({_id:ID});
 
         if(user.Email == 'admin@qrinsight.com'){
-            return res.status(400).send({error:"Unauthorizated Access.You can't able to update", success:false});
+            return res.status(400).send({error:"Unauthorizated Access. You Can't Able To Delete", success:false});
         }
 
         await UserModel.findByIdAndDelete({_id:ID});
@@ -72,7 +72,7 @@ profileRouter.delete('/deleteProfile/:ID',middleware, async (req,res) =>{
     } catch (error) {
         return res.status(500).send({
             success : false,
-            error : error
+            error : error.message
         })
     }
 })

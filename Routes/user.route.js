@@ -1,15 +1,22 @@
 
-const express = require("express")
+const express = require("express");
+
 const { UserModel } = require("../Models/user.model")
-const bcrypt = require("bcrypt")
+
+const bcrypt = require("bcrypt");
+
 const nodemailer = require("nodemailer");
+
 require("dotenv").config()
 const jwt = require("jsonwebtoken");
+
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
+
 const { client } = require("../Config/redis");
 const { passport } = require("../Config/google-oauth")
 const { passport1 } = require("../Config/facebookauth");
 const { blackmodel } = require("../Models/blackmodel");
+
 const { middleware } = require("../Middlewares/auth.middleware");
 
 
@@ -111,6 +118,7 @@ userroute.get("/verify", async (req, res) => {
     }
 })
 
+
 //login route with mail and password =============================================
 userroute.post("/login", async (req, res) => {
     try {
@@ -191,8 +199,8 @@ let sendotpmail = async (Name, Email, otp) => {
 }
 //google auth=====================================================================================
 
-userroute.get('/auth/google',
-    passport1.authenticate('google', { scope: ['profile', 'email'] }));
+userroute.get('/auth/google', passport1.authenticate('google', { scope: ['profile', 'email'] }));
+
 
 userroute.get('/auth/google/callback',
     passport1.authenticate('google', { failureRedirect: '/login', session: false }),
@@ -364,11 +372,13 @@ userroute.get('/auth/facebook/callback',
     });
 
 
+
+
 //github oauth====================================================================
 
 userroute.get("/callback", async (req, res) => {
     let { code } = req.query
-    //console.log(code)
+    console.log(code)
 
     const accessToken = await fetch("https://github.com/login/oauth/access_token", {
         method: "POST",
@@ -382,7 +392,8 @@ userroute.get("/callback", async (req, res) => {
             code
         })
     }).then((res) => res.json())
-    //console.log(accessToken)
+
+    console.log(accessToken)
 
     let user = await fetch(`https://api.github.com/user`, {
         method: 'GET',
@@ -393,7 +404,8 @@ userroute.get("/callback", async (req, res) => {
     })
 
     user = await user.json()
-    //console.log(user)
+
+    console.log(user)
 
     let userEmail = await fetch(`https://api.github.com/user/emails`, {
         method: 'GET',
@@ -406,9 +418,11 @@ userroute.get("/callback", async (req, res) => {
     userEmail = await userEmail.json()
     console.log(userEmail);
 
-    //console.log(userEmail[0].email)
+    console.log(userEmail[0].email)
+
     let Email = userEmail[0].email
     let gitusser = await gituser(Email, user)
+
     console.log(gitusser)
 
     let token = jwt.sign({ id: user._id, verified: user.ismailverified, role: user.Role }, process.env.secretkey, { expiresIn: "6hr" })
@@ -452,7 +466,7 @@ async function gituser(Email, user) {
     const gituser = await UserModel.findOne({ Email })
 
     if (!gituser) {
-        console.log("adding new user")
+        console.log("Add new User in DB")
         let newuser = new UserModel({
             Email,
             Name: user.name,
@@ -476,10 +490,12 @@ async function gituser(Email, user) {
 
 
 userroute.get('/getallusers', middleware, async (req, res) => {
-    const Role = req.role;
-    console.log(Role);
-    console.log(req.id);
-    const user = await UserModel.findById({ _id: req.id })
+    const Role = req.qr.role;
+
+    console.log(req.qr);
+
+    const user = await UserModel.findById({ _id: req.qr.id })
+
     console.log(user);
 
     if (Role !== 'Admin') {
@@ -495,7 +511,7 @@ userroute.get('/getallusers', middleware, async (req, res) => {
         })
 
     } catch (error) {
-        return res.status(400).send({ msg: error.message, users: user })
+        return res.status(400).send({ msg: error.message })
     }
 })
 
