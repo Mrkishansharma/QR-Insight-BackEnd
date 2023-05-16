@@ -28,7 +28,7 @@ userroute.post("/register", async (req, res) => {
         console.log('print user => ', user)
 
         if (user) {
-            return res.status(400).send({ "msg": "already exist please login" })
+            return res.status(400).send({ "msg": "Your Accound Already Exits. Please Login." })
         }
 
         let hashpasswod = bcrypt.hashSync(Password, 6)
@@ -40,7 +40,7 @@ userroute.post("/register", async (req, res) => {
         console.log("new user for db => ", dbnewuser)
 
         sendverificationmail(Name, Email, dbnewuser._id)
-        res.status(200).send({ "msg": "User registered successfully. Please verify your email address." })
+        res.status(200).send({ "msg": "User registered successfully. Please Verify Your Email Address." })
 
 
     } catch (error) {
