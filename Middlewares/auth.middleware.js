@@ -12,14 +12,14 @@ const middleware = async (req, res, next) => {
 
 
         // console.log(token, refreshtoken);
-        if(token){
+        if (token) {
             console.log('token hai');
-        }else{
+        } else {
             console.log('token nhi hai');
         }
-        if(refreshtoken){
+        if (refreshtoken) {
             console.log('refresh token hai');
-        }else{
+        } else {
             console.log('refresh token nhi hai');
         }
 
@@ -27,7 +27,7 @@ const middleware = async (req, res, next) => {
 
             if (!refreshtoken) {
 
-                return res.status(400).send({ "msg": "Please Login Again. AccessToken Not Found (Case : 0)", isValidToken : false });
+                return res.status(400).send({ "msg": "Please Login Again. AccessToken Not Found (Case : 0)", isValidToken: false });
 
             } else {
                 try {
@@ -49,12 +49,12 @@ const middleware = async (req, res, next) => {
 
                     } else {
 
-                        return res.status(400).send({ "msg": "Please Login First. (Case : 0) ", isValidToken : false });
+                        return res.status(400).send({ "msg": "Please Login First. (Case : 0) ", isValidToken: false });
 
                     }
                 } catch (error) {
 
-                    return res.status(400).send({ "msg": "Please Login First. (Case : 1)", isValidToken : false });
+                    return res.status(400).send({ "msg": "Please Login First. (Case : 1)", isValidToken: false });
 
                 }
             }
@@ -67,51 +67,43 @@ const middleware = async (req, res, next) => {
 
 
                 if (istokenblacklist || isrefreshtokenblacklisted) {
-                    return res.status(400).send({ msg: "Not Authorized. PLease Login Again (Case : 1)", isValidToken : false });
+                    return res.status(400).send({ msg: "Not Authorized. PLease Login Again (Case : 1)", isValidToken: false });
                 }
 
-                try {
+                let decodedtoken = jwt.verify(token, process.env.secretkey);
 
-                    let decodedtoken = jwt.verify(token, process.env.secretkey);
+                let decodedrefreshtoken = jwt.verify(refreshtoken, process.env.secretkey);
 
-                    let decodedrefreshtoken = jwt.verify(refreshtoken, process.env.secretkey);
-
-                    if (!decodedtoken) {
-                        if (!decodedrefreshtoken) {
-                            return res.status(400).send({ msg: "Unauthorized Access. (Case : 2)", isValidToken : false });
-                        } else {
-                            let { id, verified, role } = decodedrefreshtoken
-
-                            let token = jwt.sign({ id, verified, role }, process.env.secretkey, { expiresIn: "6hr" })
-                            client.set('token', token, 'EX', 21600);
-
-                            req.qr.id = id
-                            req.qr.verified = verified
-                            req.qr.role = role
-
-                            next()
-
-                        }
-
+                if (!decodedtoken) {
+                    if (!decodedrefreshtoken) {
+                        return res.status(400).send({ msg: "Unauthorized Access. (Case : 2)", isValidToken: false });
                     } else {
+                        let { id, verified, role } = decodedrefreshtoken
 
-                        let { id, verified, role } = decodedtoken
+                        let token = jwt.sign({ id, verified, role }, process.env.secretkey, { expiresIn: "6hr" })
+                        client.set('token', token, 'EX', 21600);
+
                         req.qr.id = id
                         req.qr.verified = verified
                         req.qr.role = role
 
-                        next();
+                        next()
+
                     }
 
+                } else {
 
+                    let { id, verified, role } = decodedtoken
+                    req.qr.id = id
+                    req.qr.verified = verified
+                    req.qr.role = role
 
-
-                } catch (error) {
-                    return res.status(400).send({ "msg": "Please Login First. (Case : 3)", isValidToken : false });
+                    next();
                 }
 
+
             } catch (error) {
-                return res.status(400).send({ "msg": "Please Login First. (Case : 4)",isValidToken : false });
+                return res.status(400).send({ "msg": "Please Login First. (Case : 4)",error:error.message ,isValidToken: false });
             }
 
         }
@@ -119,7 +111,7 @@ const middleware = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        res.send({msg:error.message, isValidToken : false})
+        res.send({ msg: error.message, isValidToken: false })
     }
 
 
