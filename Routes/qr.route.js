@@ -5,14 +5,18 @@ const { Router } = require('express');
 const qrRouter = Router();
 
 
-const { textQrRouter, linkQrRouter, phoneQrRouter, whatsappQrRouter, upiQrRouter, emailQrRouter, zoomQrRouter, wifiQrRouter, vcardQrRouter } = require('../Controllers/qr.controller');
+const { textQrRouter, linkQrRouter, phoneQrRouter, whatsappQrRouter, upiQrRouter, emailQrRouter, zoomQrRouter, wifiQrRouter, vcardQrRouter, fetchAllQRCodes } = require('../Controllers/qr.controller');
 
 
 const { middleware } = require('../Middlewares/auth.middleware');
 
 
 
+
+
 // protected route checking middleware
+
+
 qrRouter.use(middleware)
 
 qrRouter.post('/text', textQrRouter)
@@ -40,6 +44,9 @@ qrRouter.post('/wifi', wifiQrRouter)
 
 
 qrRouter.post("/vcard" , vcardQrRouter)
+
+
+qrRouter.get("/getallQR", fetchAllQRCodes);
 
 
 module.exports = {

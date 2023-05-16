@@ -646,9 +646,46 @@ const vcardQrRouter = async (req, res) => {
 
 
 
+const fetchAllQRCodes = async (req,res)=>{
+
+    try {
+        
+        const {role} =  req.qr;
+
+        if(role === 'Admin'){
+
+            const Qrcodesdata = await QRModel.find();
+
+            return res.status(200).send({
+                "msg":"Data fetched Successfully",
+                Qrcodesdata
+            })
+
+        }
+
+        else{
+            return res.status(404).send({
+                "error":"Unauthorized Access detected !! "
+            })
+        }
+
+    } 
+    
+    catch (error) {
+        return res.status(400).send({
+            "error":error.message
+        })
+    }
+
+
+}
+
+
+
 
 
 module.exports = {
+
     textQrRouter,
     linkQrRouter,
     phoneQrRouter,
@@ -657,5 +694,7 @@ module.exports = {
     emailQrRouter,
     zoomQrRouter,
     wifiQrRouter,
-    vcardQrRouter
+    vcardQrRouter,
+    fetchAllQRCodes
+    
 }
