@@ -242,6 +242,8 @@ userroute.get('/auth/google/callback',
 
     });
 
+
+
 userroute.get("/getdata", async (req, res) => {
     try {
         let { _id } = req.query
@@ -513,6 +515,13 @@ userroute.get('/getallusers', middleware, async (req, res) => {
     } catch (error) {
         return res.status(400).send({ msg: error.message })
     }
+})
+
+
+userroute.get('/checkAccessToken', middleware, (req,res)=>{
+    res.status(200).send({
+        isValidToken : true
+    })
 })
 
 
