@@ -27,7 +27,7 @@ const middleware = async (req, res, next) => {
 
             if (!refreshtoken) {
 
-                return res.status(400).send({ "msg": "Please Login Again. AccessToken Not Found (Case : 0)" });
+                return res.status(400).send({ "msg": "Please Login Again. AccessToken Not Found (Case : 0)", isValidToken : false });
 
             } else {
                 try {
@@ -49,12 +49,12 @@ const middleware = async (req, res, next) => {
 
                     } else {
 
-                        return res.status(400).send({ "msg": "Please Login First. (Case : 0) " });
+                        return res.status(400).send({ "msg": "Please Login First. (Case : 0) ", isValidToken : false });
 
                     }
                 } catch (error) {
 
-                    return res.status(400).send({ "msg": "Please Login First. (Case : 1)" });
+                    return res.status(400).send({ "msg": "Please Login First. (Case : 1)", isValidToken : false });
 
                 }
             }
@@ -67,7 +67,7 @@ const middleware = async (req, res, next) => {
 
 
                 if (istokenblacklist || isrefreshtokenblacklisted) {
-                    return res.status(400).send({ msg: "Not Authorized. PLease Login Again (Case : 1)" });
+                    return res.status(400).send({ msg: "Not Authorized. PLease Login Again (Case : 1)", isValidToken : false });
                 }
 
                 try {
@@ -78,7 +78,7 @@ const middleware = async (req, res, next) => {
 
                     if (!decodedtoken) {
                         if (!decodedrefreshtoken) {
-                            return res.status(400).send({ msg: "Unauthorized Access. (Case : 2)" });
+                            return res.status(400).send({ msg: "Unauthorized Access. (Case : 2)", isValidToken : false });
                         } else {
                             let { id, verified, role } = decodedrefreshtoken
 
@@ -107,11 +107,11 @@ const middleware = async (req, res, next) => {
 
 
                 } catch (error) {
-                    return res.status(400).send({ "msg": "Please Login First. (Case : 3)" });
+                    return res.status(400).send({ "msg": "Please Login First. (Case : 3)", isValidToken : false });
                 }
 
             } catch (error) {
-                return res.status(400).send({ "msg": "Please Login First. (Case : 4)" });
+                return res.status(400).send({ "msg": "Please Login First. (Case : 4)",isValidToken : false });
             }
 
         }
@@ -119,7 +119,7 @@ const middleware = async (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        res.send({msg:error.message})
+        res.send({msg:error.message, isValidToken : false})
     }
 
 
