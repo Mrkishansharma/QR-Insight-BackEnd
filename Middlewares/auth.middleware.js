@@ -72,7 +72,11 @@ const middleware = async (req, res, next) => {
 
                 let decodedtoken = jwt.verify(token, process.env.secretkey);
 
+                console.log('decodedtoken==>', decodedtoken);
+                
                 let decodedrefreshtoken = jwt.verify(refreshtoken, process.env.secretkey);
+                
+                console.log('decodedrefreshtoken==>', decodedrefreshtoken);
 
                 if (!decodedtoken) {
                     if (!decodedrefreshtoken) {
