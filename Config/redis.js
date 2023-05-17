@@ -12,7 +12,11 @@ const configuration={
 
 
 }
-const client=new Redis(configuration)
+
+
+// const client=new Redis(configuration)
+const client=new Redis()
+
 app.use(express.json());
 
 module.exports={
