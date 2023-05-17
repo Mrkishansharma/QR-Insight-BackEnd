@@ -52,7 +52,7 @@ userroute.post("/register", async (req, res) => {
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'mr.rajeshkumar7678@gmail.com',
+                user: 'qr.insight.craft@gmail.com',
                 pass: process.env.googlepassword
             }
         });
@@ -60,7 +60,7 @@ userroute.post("/register", async (req, res) => {
         const BaseUrl_Backend = `https://angry-cummerbund-newt.cyclic.app`
 
         let mailOptions = {
-            from: 'mr.rajeshkumar7678@gmail.com',
+            from: 'qr.insight.craft@gmail.com',
             to: Email,
             subject: 'Email For User Verification',
             html: `<p>Hi ${Name} <br> Welcome To QR-insight. <br/> Please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your Email. </p>`
@@ -157,13 +157,13 @@ let sendotpmail = async (Name, Email, otp) => {
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'mr.rajeshkumar7678@gmail.com',
+                user: 'qr.insight.craft@gmail.com',
                 pass: process.env.googlepassword
             }
         });
 
         let mailOptions = {
-            from: 'mr.rajeshkumar7678@gmail.com',
+            from: 'qr.insight.craft@gmail.com',
             to: Email,
             subject: 'Email For OTP Verifecation',
             html: `<p>Hi ${Name} <br> Please use this OTP to update your password.<br> ${otp} </p>`
@@ -276,13 +276,13 @@ userroute.post("/forgetpass", async (req, res) => {
             let transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                    user: 'mr.rajeshkumar7678@gmail.com',
+                    user: 'qr.insight.craft@gmail.com',
                     pass: process.env.googlepassword
                 }
             });
 
             let mailOptions = {
-                from: 'mr.rajeshkumar7678@gmail.com',
+                from: 'qr.insight.craft@gmail.com',
                 to: Email,
                 subject: 'Email For OTP Verifecation',
                 html: `<p>Hi ${Name} <br> Please use this OTP to update your password.<br> ${otp} </p>`
