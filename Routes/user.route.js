@@ -294,9 +294,12 @@ userroute.post("/forgetpass", async (req, res) => {
                     console.log(error);
                     console.log('error while sending otp on mail. email sent failed')
 
+                    return res.status(200).send({"userdetails": user})
+
                 } else {
                     console.log('Email sent: ' + info.response);
                     console.log('email sent successfull for otp')
+                    return res.status(200).send({"userdetails": user})
 
                 }
             });
@@ -307,7 +310,9 @@ userroute.post("/forgetpass", async (req, res) => {
            
 
         }
-        res.send({ "userdetails": user })
+        console.log('This Case Work When User is Not Found in DB');
+        res.status(400).send({error:"Something Went Wrong. Try After Some Time"})
+        // res.send({ "userdetails": user })
     } catch (error) {
         console.log(error)
         res.status(400).send({
