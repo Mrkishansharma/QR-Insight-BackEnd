@@ -250,6 +250,7 @@ userroute.post("/forgetpass", async (req, res) => {
     try {
         let { Email } = req.body
         let user = await UserModel.findOne({ Email })
+        console.log(user);
         if (user) {
             let OTP = "";
             for (let i = 0; i < 6; i++) {
@@ -309,9 +310,10 @@ userroute.post("/forgetpass", async (req, res) => {
 
            
 
+        }else{
+            console.log('This Case Work When User is Not Found in DB');
+            res.status(400).send({error:"Something Went Wrong. Try After Some Time"})
         }
-        console.log('This Case Work When User is Not Found in DB');
-        res.status(400).send({error:"Something Went Wrong. Try After Some Time"})
         // res.send({ "userdetails": user })
     } catch (error) {
         console.log(error)
