@@ -31,7 +31,8 @@ userroute.get("/", (req, res) => {
 userroute.post("/register", async (req, res) => {
     try {
         let { Name, Email, Password, Address, Gender } = req.body
-        let user = await UserModel.findOne({ Email })
+        let user = await UserModel.findOne({ Email });
+
         console.log('print user => ', user)
 
         if (user) {
@@ -46,8 +47,8 @@ userroute.post("/register", async (req, res) => {
 
         console.log("new user for db => ", dbnewuser)
 
-        // sendverificationmail(Name, Email, dbnewuser._id)
-        let userid = dbnewuser._id
+        let userid = dbnewuser._id;
+
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -62,7 +63,7 @@ userroute.post("/register", async (req, res) => {
             from: 'mr.rajeshkumar7678@gmail.com',
             to: Email,
             subject: 'Email For User Verification',
-            html: `<p>hi ${Name} <br> please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your Email. </p>`
+            html: `<p>Hi ${Name} <br> Welcome To QR-insight. <br/> Please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your Email. </p>`
         };
 
         console.log('mailOptions => ', mailOptions)
@@ -72,73 +73,24 @@ userroute.post("/register", async (req, res) => {
                 console.log(error);
                 console.log('email sent failed')
                 return res.status(500).send({ "msg": "Something Went Wrong. Try After Some Time" })
-
-
             } else {
                 console.log('Email sent: ' + info.response);
                 console.log('email sent successfully')
                 return res.status(200).send({ "msg": "User registered successfully. Please Verify Your Email Address." })
-
-                
             }
         });
-        
-        
-        
+
+
 
     } catch (error) {
         console.log('error while register => ', error)
-        return res.status(500).send({ "msg": "Internal Server Error." })
+        return res.status(500).send({ "msg": error.message })
 
     }
 })
 
-//to send mail==============================================================
 
-let sendverificationmail = async (Name, Email, userid) => {
-    console.log('sending email function called => ', Name, Email, userid)
-    try {
-        let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'mr.rajeshkumar7678@gmail.com',
-                pass: process.env.googlepassword
-            }
-        });
-
-        const BaseUrl_Backend = `https://angry-cummerbund-newt.cyclic.app`
-
-        let mailOptions = {
-            from: 'mr.rajeshkumar7678@gmail.com',
-            to: Email,
-            subject: 'Email For User Verification',
-            html: `<p>hi ${Name} <br> please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your Email. </p>`
-        };
-
-        console.log('mailOptions => ', mailOptions)
-
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                console.log('email sent failed')
-                return false
-
-            } else {
-                console.log('Email sent: ' + info.response);
-                console.log('email sent successfully')
-                return true
-
-            }
-        });
-    } catch (error) {
-        console.log('error while sending email')
-        console.log(error)
-        return false
-    }
-
-}
-
-//verify mail route==========================================================
+// verify mail route 
 
 userroute.get("/verify", async (req, res) => {
     try {
@@ -154,12 +106,12 @@ userroute.get("/verify", async (req, res) => {
         res.status(200).send({ "msg": "User Email Verified Successfully." })
 
     } catch (error) {
-        console.log(error)
+        res.status(200).send({ "msg": error.message })
     }
 })
 
 
-//login route with mail and password =============================================
+// login route with mail and password
 userroute.post("/login", async (req, res) => {
     try {
         let { Email, Password } = req.body
@@ -190,7 +142,7 @@ userroute.post("/login", async (req, res) => {
         res.status(200).send({ "msg": "Login Successfull", "userdetails": user })
 
     } catch (error) {
-        res.status(400).send(error.message)
+        res.status(400).send({ msg: error.message })
     }
 })
 
@@ -213,7 +165,7 @@ let sendotpmail = async (Name, Email, otp) => {
         let mailOptions = {
             from: 'mr.rajeshkumar7678@gmail.com',
             to: Email,
-            subject: 'OTP verifecation mail',
+            subject: 'Email For OTP Verifecation',
             html: `<p>Hi ${Name} <br> Please use this OTP to update your password.<br> ${otp} </p>`
         };
 
@@ -230,14 +182,16 @@ let sendotpmail = async (Name, Email, otp) => {
 
             }
         });
-        console.log("2")
+
     } catch (error) {
         console.log(error)
         console.log('catch error while sending otp mail')
     }
 
 }
-//google auth=====================================================================================
+
+
+//google auth
 
 userroute.get('/auth/google', passport1.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -247,7 +201,9 @@ userroute.get('/auth/google/callback',
     function (req, res) {
         // Successful authentication, redirect home.
         console.log(req.user)
+
         const user = req.user
+
         let token = jwt.sign({ id: user._id, verified: user.ismailverified, role: user.Role }, process.env.secretkey, { expiresIn: "6hr" })
         let refreshtoken = jwt.sign({ id: user._id, verified: user.ismailverified, role: user.Role }, process.env.secretkey, { expiresIn: "1d" })
 
@@ -268,17 +224,6 @@ userroute.get('/auth/google/callback',
                     console.log(a)
                 </script>
         `)
-
-        //     res.send(`<a href="${frontendURL}?userid=${user._id}" id="myid">Loding...🕧</a>
-        // <script>
-        //     let a = document.getElementById('myid')
-        //     a.click()
-        //     console.log(a)
-        // </script>`)
-
-
-
-
 
     });
 
@@ -310,14 +255,56 @@ userroute.post("/forgetpass", async (req, res) => {
             for (let i = 0; i < 6; i++) {
                 OTP += Math.floor(Math.random() * 10);
             }
-            console.log(OTP)
+            console.log("OTP ===> ", OTP)
+
             client.set('OTP', OTP, 'EX', 3600);
 
             console.log('function call for send otp mail =>', user.Name, user.Email, OTP)
 
-            const anssendotpfunc = await sendotpmail(user.Name, user.Email, OTP)
+            // const anssendotpfunc = await sendotpmail(user.Name, user.Email, OTP)
 
-            console.log('ans send otp func ==> ', anssendotpfunc)
+            // **************************************************************************************
+
+
+            
+            let Name = user.Name
+            let otp = OTP
+
+
+
+            let transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'mr.rajeshkumar7678@gmail.com',
+                    pass: process.env.googlepassword
+                }
+            });
+
+            let mailOptions = {
+                from: 'mr.rajeshkumar7678@gmail.com',
+                to: Email,
+                subject: 'Email For OTP Verifecation',
+                html: `<p>Hi ${Name} <br> Please use this OTP to update your password.<br> ${otp} </p>`
+            };
+
+            console.log('mailOptions for send otp ==> ', mailOptions)
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error);
+                    console.log('error while sending otp on mail. email sent failed')
+
+                } else {
+                    console.log('Email sent: ' + info.response);
+                    console.log('email sent successfull for otp')
+
+                }
+            });
+
+
+            // ******************************************************************************************
+
+           
 
         }
         res.send({ "userdetails": user })
@@ -333,8 +320,10 @@ userroute.post("/verifyotp", async (req, res) => {
     try {
         let { OTP } = req.body
         let otp = await client.get('OTP')
+
         console.log('OTP from user ', OTP)
         console.log('otp from redis', otp)
+
         if (OTP == otp) {
             res.status(200).send({ "msg": "OTP verified Successfully" })
         } else {
@@ -344,7 +333,8 @@ userroute.post("/verifyotp", async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(400).send({
-            error: error.message
+            error: error.message,
+            msg: error.message
         })
     }
 })
@@ -372,7 +362,7 @@ userroute.put("/updatepass", async (req, res) => {
     }
 })
 
-//logout======================================================================
+//logout
 userroute.get("/logout", async (req, res) => {
     try {
 
@@ -558,52 +548,52 @@ userroute.get('/getallusers', middleware, async (req, res) => {
 })
 
 
-userroute.get('/checkAccessToken', middleware, (req,res)=>{
+userroute.get('/checkAccessToken', middleware, (req, res) => {
     res.status(200).send({
-        isValidToken : true
+        isValidToken: true
     })
 })
 
 
-userroute.put('/updateRole/:userid', middleware, async (req,res)=>{
+userroute.put('/updateRole/:userid', middleware, async (req, res) => {
     const Role = req.qr.role;
-    if(Role !== 'Admin'){
+    if (Role !== 'Admin') {
         return res.status(400).send({
-            isError : true,
-            msg : "You can't change the role. (Unauthorized Access)"
+            isError: true,
+            msg: "You can't change the role. (Unauthorized Access)"
         })
     }
     try {
-        const {userid} = req.params;
-        const user = await UserModel.findById({_id : userid});
+        const { userid } = req.params;
+        const user = await UserModel.findById({ _id: userid });
 
-        if(user.Email == 'admin@qrinsight.com'){
+        if (user.Email == 'admin@qrinsight.com') {
             return res.status(400).send({
-                isError : true,
-                msg : "You can't change the role of this account. (Contact to Manager)."
+                isError: true,
+                msg: "You can't change the role of this account. (Contact to Manager)."
             })
-        }else{
-            if(user.Role === 'Admin'){
+        } else {
+            if (user.Role === 'Admin') {
                 user.Role = 'User'
-            }else{
+            } else {
                 user.Role = 'Admin'
             }
 
             await user.save()
 
             return res.status(200).send({
-                isError : false,
-                msg : "User Role Successfully Updated",
+                isError: false,
+                msg: "User Role Successfully Updated",
                 user
             })
 
         }
 
     } catch (error) {
-        return res.status(400).send({ 
-            isError : true,
+        return res.status(400).send({
+            isError: true,
             msg: error.message
-         })
+        })
     }
 })
 
