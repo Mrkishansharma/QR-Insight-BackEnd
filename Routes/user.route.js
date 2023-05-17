@@ -46,13 +46,50 @@ userroute.post("/register", async (req, res) => {
 
         console.log("new user for db => ", dbnewuser)
 
-        sendverificationmail(Name, Email, dbnewuser._id)
-        res.status(200).send({ "msg": "User registered successfully. Please Verify Your Email Address." })
+        // sendverificationmail(Name, Email, dbnewuser._id)
+        let userid = dbnewuser._id
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'mr.rajeshkumar7678@gmail.com',
+                pass: process.env.googlepassword
+            }
+        });
 
+        const BaseUrl_Backend = `https://angry-cummerbund-newt.cyclic.app`
+
+        let mailOptions = {
+            from: 'mr.rajeshkumar7678@gmail.com',
+            to: Email,
+            subject: 'Email For User Verification',
+            html: `<p>hi ${Name} <br> please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your Email. </p>`
+        };
+
+        console.log('mailOptions => ', mailOptions)
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error);
+                console.log('email sent failed')
+                return res.status(500).send({ "msg": "Something Went Wrong. Try After Some Time" })
+
+
+            } else {
+                console.log('Email sent: ' + info.response);
+                console.log('email sent successfully')
+                return res.status(200).send({ "msg": "User registered successfully. Please Verify Your Email Address." })
+
+                
+            }
+        });
+        
+        
+        
 
     } catch (error) {
-        res.status(400).send(error)
         console.log('error while register => ', error)
+        return res.status(500).send({ "msg": "Internal Server Error." })
+
     }
 })
 
@@ -74,8 +111,8 @@ let sendverificationmail = async (Name, Email, userid) => {
         let mailOptions = {
             from: 'mr.rajeshkumar7678@gmail.com',
             to: Email,
-            subject: 'For verifecation mail',
-            html: `<p>hi ${Name} <br> please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your mail. </p>`
+            subject: 'Email For User Verification',
+            html: `<p>hi ${Name} <br> please click here to <a href="${BaseUrl_Backend}/user/verify?id=${userid}">verify</a>  your Email. </p>`
         };
 
         console.log('mailOptions => ', mailOptions)
@@ -84,16 +121,19 @@ let sendverificationmail = async (Name, Email, userid) => {
             if (error) {
                 console.log(error);
                 console.log('email sent failed')
+                return false
 
             } else {
                 console.log('Email sent: ' + info.response);
                 console.log('email sent successfully')
+                return true
 
             }
         });
     } catch (error) {
         console.log('error while sending email')
         console.log(error)
+        return false
     }
 
 }
