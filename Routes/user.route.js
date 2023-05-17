@@ -525,6 +525,49 @@ userroute.get('/checkAccessToken', middleware, (req,res)=>{
 })
 
 
+userroute.put('/updateRole/:userid', middleware, async (req,res)=>{
+    const Role = req.qr.role;
+    if(Role !== 'Admin'){
+        return res.status(400).send({
+            isError : true,
+            msg : "You can't change the role. (Unauthorized Access)"
+        })
+    }
+    try {
+        const {userid} = req.params;
+        const user = await UserModel.findById({_id : userid});
+
+        if(user.Email == 'admin@qrinsight.com'){
+            return res.status(400).send({
+                isError : true,
+                msg : "You can't change the role of this account. (Contact to Manager)."
+            })
+        }else{
+            if(user.Role === 'Admin'){
+                user.Role = 'User'
+            }else{
+                user.Role = 'Admin'
+            }
+
+            await user.save()
+
+            return res.status(200).send({
+                isError : false,
+                msg : "User Role Successfully Updated",
+                user
+            })
+
+        }
+
+    } catch (error) {
+        return res.status(400).send({ 
+            isError : true,
+            msg: error.message
+         })
+    }
+})
+
+
 module.exports = {
     userroute
 }
