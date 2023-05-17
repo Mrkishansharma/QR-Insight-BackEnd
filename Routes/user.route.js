@@ -438,7 +438,7 @@ userroute.get("/callback", async (req, res) => {
 
 
     res.send(`
-                <a href="${frontendURL1}?userid=${user._id}" id="myid" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #222222; margin: 0; padding: 0; overflow: scroll;">
+                <a href="${frontendURL1}?userid=${gitusser._id}" id="myid" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #222222; margin: 0; padding: 0; overflow: scroll;">
                     <img src="https://i.pinimg.com/originals/2e/9c/68/2e9c6878eae5bbcdaa2d07ed4dbd79b8.gif" alt="">
                 </a>
                 <script>
