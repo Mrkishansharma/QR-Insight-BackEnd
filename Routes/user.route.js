@@ -27,7 +27,53 @@ userroute.get("/", (req, res) => {
     res.send("user route")
 })
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     userSchema:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         Name:
+ *           type: string
+ *         Email:
+ *           type: string
+ *         Password:
+ *           type: string
+ *         Address:
+ *           type: string
+ *         Gender:
+ *           type: string
+ *           enum: [Male, Female, Other]
+ *         Role:
+ *           type: string
+ *           enum: [Admin, User, Guest]
+ */
 
+/**
+ * @swagger
+ * /user/register:
+ *  post:
+ *      summary: To add a new user to the database
+ *      tags: [posts]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/userSchema'
+ *      responses:
+ *          200:
+ *              description: User Registration Successfull. Please verify Your Email Address.
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/userSchema'
+ *          500:
+ *              description: Some server error
+ */
 userroute.post("/register", async (req, res) => {
     try {
         let { Name, Email, Password, Address, Gender } = req.body
@@ -91,7 +137,22 @@ userroute.post("/register", async (req, res) => {
 
 
 // verify mail route 
-
+/**
+ * @swagger
+ *   /user/verify:
+ *   get:
+ *     summary: This route will verified the mail and give the acces to login
+ *     tags: [get]
+ *     responses:
+ *       200:
+ *         description: vefified the mail.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/userSchema'
+ */
 userroute.get("/verify", async (req, res) => {
     try {
         let { id } = req.query
@@ -110,7 +171,28 @@ userroute.get("/verify", async (req, res) => {
     }
 })
 
-
+/**
+ * @swagger
+ * /user/login:
+ *  post:
+ *      summary: To login with thw website
+ *      tags: [posts]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/userSchema'
+ *      responses:
+ *          200:
+ *              description: Login sucessfull
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/userSchema'
+ *          500:
+ *              description: Some server error
+ */
 // login route with mail and password
 userroute.post("/login", async (req, res) => {
     try {
@@ -228,7 +310,22 @@ userroute.get('/auth/google/callback',
     });
 
 
-
+/**
+ * @swagger
+ *   /user/getdata:
+ *   get:
+ *     summary: This route will get the data by userid
+ *     tags: [get]
+ *     responses:
+ *       200:
+ *         description: userdetails.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/userSchema'
+ */
 userroute.get("/getdata", async (req, res) => {
     try {
         let { _id } = req.query
@@ -245,7 +342,28 @@ userroute.get("/getdata", async (req, res) => {
 
 
 //find data =======================================
-
+/**
+ * @swagger
+ * /user/forgetpass:
+ *  post:
+ *      summary: this route will send you the otp for password update
+ *      tags: [posts]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/userSchema'
+ *      responses:
+ *          200:
+ *              description: send you the userdetails and otp to mail
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/userSchema'
+ *          500:
+ *              description: Some server error
+ */
 userroute.post("/forgetpass", async (req, res) => {
     try {
         let { Email } = req.body
@@ -323,6 +441,28 @@ userroute.post("/forgetpass", async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /user/verifyotp:
+ *  post:
+ *      summary: this route will verify your mail
+ *      tags: [posts]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/userSchema'
+ *      responses:
+ *          200:
+ *              description: send you the massage for conformation of otp
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/userSchema'
+ *          500:
+ *              description: Some server error
+ */
 userroute.post("/verifyotp", async (req, res) => {
     try {
         let { OTP } = req.body
@@ -346,6 +486,30 @@ userroute.post("/verifyotp", async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /user/updatepass:
+ *   put:
+ *     summary: To update user password in the database
+ *     tags: [put]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *            $ref: '#/components/schemas/userSchema'
+ *     responses:
+ *       200:
+ *         description: password update successfully please login
+ *         content:
+ *           application/json:
+ *             schema:
+ *              $ref: '#/components/schemas/userSchema'
+ *       404:
+ *         description: The specified user ID does not exist.
+ *       500:
+ *         description: Some server error
+ */
 userroute.put("/updatepass", async (req, res) => {
     try {
         let { id } = req.query
@@ -369,6 +533,22 @@ userroute.put("/updatepass", async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ *   /user/logout:
+ *   get:
+ *     summary: This route will logout the user from website
+ *     tags: [get]
+ *     responses:
+ *       200:
+ *         description: userdetails.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/userSchema'
+ */
 //logout
 userroute.get("/logout", async (req, res) => {
     try {
@@ -526,7 +706,22 @@ async function gituser(Email, user) {
 }
 
 
-
+/**
+ * @swagger
+ *   /user/getallusers:
+ *   get:
+ *     summary: This route will return all the user 
+ *     tags: [get]
+ *     responses:
+ *       200:
+ *         description: only admin can access.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 $ref: '#/components/schemas/userSchema'
+ */
 
 userroute.get('/getallusers', middleware, async (req, res) => {
     const Role = req.qr.role;
