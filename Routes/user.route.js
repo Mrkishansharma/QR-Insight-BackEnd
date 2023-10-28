@@ -292,7 +292,7 @@ userroute.get('/auth/google/callback',
         client.set('token', token, 'EX', 21600);
         client.set('refreshtoken', refreshtoken, 'EX', 86400);
 
-        const frontendURL = `https://qr-insight-craft.netlify.app/`
+        const frontendURL = `https://qr-insight-niteshthori24198.vercel.app/`
 
         res.send(`
                 <a href="${frontendURL}?userid=${user._id}" id="myid" style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #222222; margin: 0; padding: 0; overflow: scroll;">
@@ -650,7 +650,7 @@ userroute.get("/callback", async (req, res) => {
     client.set('token', token, 'EX', 21600);
     client.set('refreshtoken', refreshtoken, 'EX', 86400);
 
-    const frontendURL1 = `https://qr-insight-craft.netlify.app/`
+    const frontendURL1 = `https://qr-insight-niteshthori24198.vercel.app/`
 
 
 
